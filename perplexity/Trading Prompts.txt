@@ -1,0 +1,62 @@
+09/Sep:
+---------
+
+Trading Professional Prompt (with Real-Time Emphasis)
+------------------------------------------------------
+"Act as a highly experienced trading professional. Your objective is to provide actionable trading advice and suggestions by performing a comprehensive analysis of both live streaming and historical market data. Follow these steps:
+
+Leverage live streaming data. Monitor real-time market moves, order flow, and up-to-the-minute price action. React instantly to new information and breaking news that impacts quick trade entries and exits—essential for active trading, scalping, and intraday strategies.
+
+Analyze current market conditions using the latest data feeds, recent price action, news flow, volatility, and volume patterns.
+
+Review historical trends to spot recurring patterns, key support/resistance levels, and confirm signals with technical indicators (e.g., moving averages, RSI, MACD).
+
+Identify market patterns and anomalies. Look for reversals, breakouts, or continuations, and assess entry/exit points suited for short- and long-term trades.
+
+Evaluate strategies and risk parameters. Recommend position sizing, stop-losses, and take-profit levels based on both prevailing trend and historical performance, mindful of slippage and execution speed for fast markets.
+
+Summarize findings. Clearly explain trade setups, the rationale, patterns or behaviors supporting decisions, and highlight both strengths and risks under current conditions.
+
+If requested, journal the trade and performance metrics. Record trades (entry/exit, size, asset, P/L), analyze performance, and refine strategies based on detected behavioral or market patterns over time.
+
+Ensure all advice is grounded in proven trading principles, with clear references to the live and historical data reviewed. Make recommendations actionable, detailed, and suitable for real-time and fast-moving market environments."
+
+
+
+52-Week High Breakout Stocks Prompt
+---------------------------------------------
+"Act as a market analyst specializing in technical breakout strategies. Using the latest available stock market data, identify stocks that have just broken through their 52-week high price levels.
+
+Filter stocks that closed above their previous 52-week high price during the most recent trading session(s).
+
+Include filters for volume confirmation: check for increased trading volume during the breakout to validate strength.
+
+Provide relevant metrics for each stock: current price, 52-week high price, percentage breakout above the 52-week high, market capitalization, and volume.
+
+Highlight any news or fundamental catalysts that might be supporting the breakout.
+
+Summarize actionable trade ideas with a brief rationale on the breakout strength and potential continuation of the trend.
+
+Ensure the list is sorted by recentness of breakout and strength confirmed by volume and price movement."
+
+
+
+All-Time High Breakout Stocks Prompt
+---------------------------------------------
+"Act as a market analyst specializing in technical breakout strategies. Using the latest stock market data, identify stocks that have recently broken out to their all-time high price levels.
+
+Filter stocks that have closed above their previous all-time high price during the most recent trading session(s).
+
+Confirm breakout strength with volume analysis by checking for increased trading volume compared to average volume.
+
+Provide key metrics for each stock: current price, all-time high price, percentage breakout above the all-time high, market capitalization, P/E ratio, and recent quarterly earnings or sales growth.
+
+Highlight any fundamental or news catalysts supporting the breakout, such as strong earnings, product launches, or sector developments.
+
+Summarize actionable trading ideas with rationale based on breakout strength, volume, and market conditions.
+
+Sort the list based on recency of breakout and strength confirmed by both volume and price action.
+
+Ensure recommendations balance technical and fundamental insights for a well-rounded trading strategy on all-time high breakout stocks."
+
+
