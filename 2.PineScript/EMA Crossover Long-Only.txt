@@ -1,0 +1,115 @@
+//@version=6
+indicator("EMA Crossover Long-Only (ATR & % SL/TP Indicator)", overlay = true)
+
+
+// ---- Time filters ----
+// 1) Last N days window
+useLastNDays = input.bool(true, "Limit to last N days?")
+daysBack     = input.int(5, "N days back")
+
+startTimeLastN = timestamp(year(timenow), month(timenow), dayofmonth(timenow) - daysBack, 0, 0)
+inLastNDays = not useLastNDays or time >= startTimeLastN
+
+// 2) Custom calendar date range (inclusive)
+useCustomRange = input.bool(false, "Use custom date range?")
+
+startYear  = input.int(2025, "Start Year")
+startMonth = input.int(1,    "Start Month",  minval = 1, maxval = 12)
+startDay   = input.int(1,    "Start Day",    minval = 1, maxval = 31)
+
+endYear    = input.int(2025, "End Year")
+endMonth   = input.int(12,   "End Month",    minval = 1, maxval = 12)
+endDay     = input.int(31,   "End Day",      minval = 1, maxval = 31)
+
+startTsCustom = timestamp(startYear, startMonth, startDay, 0, 0)
+endTsCustom   = timestamp(endYear,   endMonth,   endDay,   23, 59)
+
+inCustomRange = not useCustomRange or (time >= startTsCustom and time <= endTsCustom)
+
+// Final trading window: must satisfy both filters if enabled
+inDateWindow = inLastNDays and inCustomRange
+
+// === Inputs ===
+fastLen = input.int(20, "Fast EMA Length")
+slowLen = input.int(50, "Slow EMA Length")
+
+useAtrForSL = input.bool(true,  "Use ATR for Stop Loss?")
+useAtrForTP = input.bool(false, "Use ATR for Take Profit?")
+
+// Percentage-based
+slPerc  = input.float(1.0, "Stop Loss %",  step = 0.1)
+tpPerc  = input.float(2.0, "Take Profit %", step = 0.1)
+
+// ATR-based
+atrLen      = input.int(14, "ATR Length")
+slAtrMult   = input.float(1.5, "SL ATR Multiple", step = 0.1)
+tpAtrMult   = input.float(3.0, "TP ATR Multiple", step = 0.1)
+
+// === Core EMA logic (same as before) ===
+fastEMA = ta.ema(close, fastLen)
+slowEMA = ta.ema(close, slowLen)
+
+plot(fastEMA, "Fast EMA", color = color.teal)
+plot(slowEMA, "Slow EMA", color = color.orange)
+
+log.info("fastEMA: {0}", fastEMA)
+log.info("inDateWindow: {0}", inDateWindow)
+
+var int   posState   = 0        // 0 = flat, 1 = long
+var float entryPrice = na
+var float slPrice    = na
+var float tpPrice    = na
+
+bullCross   = ta.crossover(fastEMA, slowEMA)
+bearCross   = ta.crossunder(fastEMA, slowEMA)
+buyFilterOk = fastEMA > slowEMA and close > slowEMA
+
+buySignalRaw  = (posState == 0) and bullCross and buyFilterOk
+buySignal     = inDateWindow and buySignalRaw
+
+// buySignal  = (posState == 0) and bullCross and buyFilterOk
+
+atr = ta.atr(atrLen)  // for ATR-based levels[web:7][web:211]
+
+// On buy: set entry, SL, TP using selected mode
+if buySignal
+    posState   := 1
+    entryPrice := close
+
+    float slPctPrice = entryPrice * (1 - slPerc/100.0)
+    float tpPctPrice = entryPrice * (1 + tpPerc/100.0)
+    float slAtrPrice = entryPrice - atr * slAtrMult
+    float tpAtrPrice = entryPrice + atr * tpAtrMult
+
+    slPrice := useAtrForSL ? slAtrPrice : slPctPrice
+    tpPrice := useAtrForTP ? tpAtrPrice : tpPctPrice
+
+// Exit when cross or SL/TP hit
+sellByCross = (posState == 1) and bearCross
+sellBySL    = (posState == 1) and close <= slPrice
+sellByTP    = (posState == 1) and close >= tpPrice
+sellSignal  = sellByCross or sellBySL or sellByTP
+
+if sellSignal
+    posState   := 0
+    entryPrice := na
+    slPrice    := na
+    tpPrice    := na
+
+// === Plot SL/TP lines only while in position ===
+plot(posState == 1 ? slPrice    : na, "Stop Loss",  color = color.red,   style = plot.style_linebr)
+plot(posState == 1 ? tpPrice    : na, "Take Profit",color = color.green, style = plot.style_linebr)
+plot(posState == 1 ? entryPrice : na, "Entry",      color = color.blue,  style = plot.style_linebr)
+
+
+
+// Only plot EMA when bar time is within last 4 hours
+
+// Markers
+plotshape(buySignal,  title="Buy",  location=location.belowbar,
+          style=shape.triangleup,   color=color.lime, size=size.small, text="BUY")
+plotshape(sellSignal, title="Sell", location=location.abovebar,
+          style=shape.triangledown, color=color.red,  size=size.small, text="SELL")
+
+alertcondition(buySignal,  title="Buy Alert",  message="BUY (EMA long, SL/TP set)")
+alertcondition(sellSignal, title="Sell Alert", message="SELL (cross or SL/TP)")
