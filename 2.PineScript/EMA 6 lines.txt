@@ -1,0 +1,34 @@
+//@version=6
+indicator("EMA (6 lines with toggles)", overlay = true)
+
+// Length inputs
+len20   = input.int(20,   title = "EMA 20 Length",   minval = 1)
+len50   = input.int(50,   title = "EMA 50 Length",   minval = 1)
+len100  = input.int(100,  title = "EMA 100 Length",  minval = 1)
+len200  = input.int(200,  title = "EMA 200 Length",  minval = 1)
+len300  = input.int(300,  title = "EMA 300 Length",  minval = 1)
+len400  = input.int(400,  title = "EMA 400 Length",  minval = 1)
+
+// Show / hide toggles
+show20  = input.bool(true,  "Show EMA 20")
+show50  = input.bool(true,  "Show EMA 50")
+show100 = input.bool(true,  "Show EMA 100")
+show200 = input.bool(true,  "Show EMA 200")
+show300 = input.bool(false, "Show EMA 300")
+show400 = input.bool(false, "Show EMA 400")
+
+// EMA calculations
+ema20   = ta.ema(close, len20)
+ema50   = ta.ema(close, len50)
+ema100  = ta.ema(close, len100)
+ema200  = ta.ema(close, len200)
+ema300  = ta.ema(close, len300)
+ema400  = ta.ema(close, len400)
+
+// Plots (conditional)
+plot(show20  ? ema20  : na, color = color.lime,        title = "EMA 20")
+plot(show50  ? ema50  : na, color = color.orange,      title = "EMA 50")
+plot(show100 ? ema100 : na, color = color.yellow,      title = "EMA 100")
+plot(show200 ? ema200 : na, color = color.blue,        title = "EMA 200")
+plot(show300 ? ema300 : na, color = color.fuchsia,     title = "EMA 300")
+plot(show400 ? ema400 : na, color = color.new(color.gray, 0), title = "EMA 400")
